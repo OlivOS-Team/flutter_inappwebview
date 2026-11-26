@@ -20,6 +20,7 @@ namespace flutter_inappwebview_plugin
   private:
     FlutterDesktopGpuSurfaceDescriptor surface_descriptor_ = {};
     Size surface_size_ = { 0, 0 };
+    uint64_t last_processed_frame_serial_ = 0;
     winrt::com_ptr<ID3D11Texture2D> surface_{ nullptr };
     winrt::com_ptr<IDXGIResource> dxgi_surface_;
 

@@ -143,8 +143,11 @@ namespace flutter_inappwebview_plugin
       needs_update_ = false;
     }
 
-    if (has_frame && frame_available_) {
-      frame_available_();
+    if (has_frame) {
+      ++frame_serial_;
+      if (frame_available_) {
+        frame_available_();
+      }
     }
   }
 

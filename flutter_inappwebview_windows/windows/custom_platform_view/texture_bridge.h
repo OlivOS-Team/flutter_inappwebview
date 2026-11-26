@@ -55,6 +55,9 @@ namespace flutter_inappwebview_plugin
     SurfaceSizeChangedCallback surface_size_changed_;
     std::atomic<bool> needs_update_ = false;
     winrt::com_ptr<ID3D11Texture2D> last_frame_;
+    // Incremented only when a captured frame is accepted. Consumers use it to
+    // avoid copying and flushing the same frame again on every Flutter frame.
+    uint64_t frame_serial_ = 0;
     std::optional<std::chrono::high_resolution_clock::time_point>
       last_frame_timestamp_;
 

@@ -130,7 +130,17 @@ namespace flutter_inappwebview_plugin
     }
 
     if (last_frame_) {
-      ProcessFrame(last_frame_);
+      D3D11_TEXTURE2D_DESC desc;
+      last_frame_->GetDesc(&desc);
+      const bool needs_new_buffer =
+        !pixel_buffer_ ||
+        pixel_buffer_->width != desc.Width ||
+        pixel_buffer_->height != desc.Height;
+      if (needs_new_buffer ||
+        frame_serial_ != last_processed_frame_serial_) {
+        ProcessFrame(last_frame_);
+        last_processed_frame_serial_ = frame_serial_;
+      }
     }
 
     auto buffer = pixel_buffer_.get();

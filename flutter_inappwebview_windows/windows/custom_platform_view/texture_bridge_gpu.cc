@@ -86,7 +86,21 @@ namespace flutter_inappwebview_plugin
     }
 
     if (last_frame_) {
-      ProcessFrame(last_frame_);
+      D3D11_TEXTURE2D_DESC desc;
+      last_frame_->GetDesc(&desc);
+      const bool needs_new_surface =
+        !surface_ ||
+        surface_size_.width != desc.Width ||
+        surface_size_.height != desc.Height;
+      // GetSurfaceDescriptor is called for every Flutter frame, while the
+      // WebView may only produce a new frame at its own cadence. Copying and
+      // Flush()ing the same texture again is expensive, especially on
+      // high-refresh displays.
+      if (needs_new_surface ||
+        frame_serial_ != last_processed_frame_serial_) {
+        ProcessFrame(last_frame_);
+        last_processed_frame_serial_ = frame_serial_;
+      }
     }
 
     if (surface_) {
