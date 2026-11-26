@@ -33,6 +33,17 @@ A Flutter plugin that allows you to add an inline webview, to use an headless we
 
 </div>
 
+> [!IMPORTANT]
+> **OlivOS fork:** This repository is a fork maintained by
+> [OlivOS-Team](https://github.com/OlivOS-Team) for
+> [OlivOS Companion](https://github.com/OlivOS-Team/OlivOS-Companion).
+> It is **not** the upstream `flutter_inappwebview` project. The only
+> intentional code change is a Windows focus fix; see
+> [`OLIVOS_PATCH.md`](OLIVOS_PATCH.md) for the baseline, patch details,
+> upstream status, and removal condition.
+> For upstream, use
+> [pichillilorenzo/flutter_inappwebview](https://github.com/pichillilorenzo/flutter_inappwebview).
+
 ## Articles/Resources
 
 - [Official documentation: inappwebview.dev/docs](https://inappwebview.dev/docs/intro)
