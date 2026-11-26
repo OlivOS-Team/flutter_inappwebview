@@ -123,7 +123,12 @@ namespace flutter_inappwebview_plugin
     RECT bounds;
     GetClientRect(plugin->registrar->GetView()->GetNativeWindow(), &bounds);
 
-    auto hwnd = CreateWindowEx(0, windowClass_.lpszClassName, L"", 0, 0,
+    // OlivOS patch: upstream uses style 0 here, which creates an owned
+    // top-level window. Clicking the WebView then activates that window and
+    // the Flutter runner loses foreground state. Keep the WebView host inside
+    // the Flutter view instead.
+    auto hwnd = CreateWindowEx(0, windowClass_.lpszClassName, L"",
+      WS_CHILD | WS_CLIPSIBLINGS, 0,
       0, bounds.right - bounds.left, bounds.bottom - bounds.top,
       plugin->registrar->GetView()->GetNativeWindow(),
       nullptr,
