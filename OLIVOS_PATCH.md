@@ -11,7 +11,7 @@ unchanged so the branch can be rebased on newer releases.
 - Base commit: `17527cae5a3371c1e87f9c1df4281a7710debf28` (upstream `master`)
 - Umbrella package: `flutter_inappwebview 6.2.0-beta.3`
 - Windows package: `flutter_inappwebview_windows 0.7.0-beta.3`
-- Maintenance branch: `olivos/windows-focus-fix`
+- Maintenance branch: `olivos/main`
 
 ## Patches
 
