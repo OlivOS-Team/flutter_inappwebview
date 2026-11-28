@@ -12,6 +12,11 @@
 namespace flutter_inappwebview_plugin
 {
   const int kNumBuffers = 1;
+  // WGC on Windows 11 24H2+ defaults to a ~16 ms minimum update interval,
+  // which caps capture near 60 FPS. Use a 1 ms floor so the capture follows
+  // the WebView compositor instead of being throttled to a fixed 60 Hz.
+  constexpr ABI::Windows::Foundation::TimeSpan kMinUpdateInterval =
+    { 10000 };
 
   TextureBridge::TextureBridge(GraphicsContext* graphics_context,
     ABI::Windows::UI::Composition::IVisual* visual)
@@ -79,6 +84,17 @@ namespace flutter_inappwebview_plugin
       capture_session_.put()))) {
       std::cerr << "Creating capture session failed." << std::endl;
       return false;
+    }
+
+    // MinUpdateInterval was added with build 26100. On older systems the
+    // interface query fails and the previous WGC pacing is kept.
+    if (auto capture_session5 = capture_session_.try_as<
+      ABI::Windows::Graphics::Capture::IGraphicsCaptureSession5>()) {
+      const HRESULT hr =
+        capture_session5->put_MinUpdateInterval(kMinUpdateInterval);
+      if (FAILED(hr)) {
+        std::cerr << "Setting MinUpdateInterval failed: " << hr << std::endl;
+      }
     }
 
     if (SUCCEEDED(capture_session_->StartCapture())) {

@@ -47,6 +47,25 @@ no new frame arrived. On high-refresh displays this repeats expensive GPU work
 up to the display refresh rate. Skipping the redundant copy and flush keeps
 the Flutter UI responsive without changing the displayed frame.
 
+### 3. Windows Graphics Capture frame pacing
+
+- File: `flutter_inappwebview_windows/windows/custom_platform_view/texture_bridge.cc`
+- Change: when `IGraphicsCaptureSession5` is available, set
+  `MinUpdateInterval` to a 1 ms floor after creating the capture session.
+
+Windows 11 24H2 (build 26100+) gives new WGC sessions a default minimum update
+interval of about 16 ms, which caps capture near 60 FPS on high-refresh
+displays. The 1 ms floor is deliberately not `0`: the API is documented as an
+OS-side throttle rather than a target frame rate, and `0` is not a documented
+"disable" value. The floor lets capture follow the WebView compositor while
+still avoiding the 16 ms default. On older Windows versions the interface query
+fails and the previous behavior is retained.
+
+Local 143 Hz measurement with a synthetic requestAnimationFrame animation:
+capture samples averaged about 26 FPS before the patch and about 80 FPS after,
+with peaks at the 143.9 Hz display cadence. Residual frame-time dips remain and
+need the mailbox/copy-path work tracked by the Companion performance plan.
+
 ## Upstream status (checked 2026-11-26)
 
 - The upstream repository has had no code commit since 2026-02-10.
