@@ -66,6 +66,22 @@ capture samples averaged about 26 FPS before the patch and about 80 FPS after,
 with peaks at the 143.9 Hz display cadence. Residual frame-time dips remain and
 need the mailbox/copy-path work tracked by the Companion performance plan.
 
+### 4. Windows WebView pointer focus
+
+- File:
+  `flutter_inappwebview_windows/lib/src/in_app_webview/custom_platform_view.dart`
+- Change: remove the pointer-down `_focusNode.requestFocus()` call and its 50 ms
+  retry.
+
+Upstream requests Flutter focus on every mouse-down inside the inline WebView.
+In composition/texture mode WebView2 owns native input focus; the request moves
+focus back to the Flutter view. With an open HTML `<select>` popup, clicking a
+second `<select>` closes the first popup but leaves `document.hasFocus() ==
+false`, so the second popup does not open until another click. The same fix
+keeps keyboard input working because WebView2 focuses its own input host when
+`SendMouseInput` is called. Verified with two HTML selects and a text input on
+WebView2 runtime 158.
+
 ## Upstream status (checked 2026-11-26)
 
 - The upstream repository has had no code commit since 2026-02-10.

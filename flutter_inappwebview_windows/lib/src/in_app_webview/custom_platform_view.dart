@@ -391,15 +391,6 @@ class _CustomPlatformViewState extends State<CustomPlatformView>
                   _reportSurfaceSize();
                   _reportWidgetPosition();
 
-                  if (!_focusNode.hasFocus) {
-                    _focusNode.requestFocus();
-                    Future.delayed(const Duration(milliseconds: 50), () {
-                      if (!_focusNode.hasFocus) {
-                        _focusNode.requestFocus();
-                      }
-                    });
-                  }
-
                   _pointerKind = ev.kind;
                   if (ev.kind == PointerDeviceKind.touch) {
                     _controller._setPointerUpdate(
